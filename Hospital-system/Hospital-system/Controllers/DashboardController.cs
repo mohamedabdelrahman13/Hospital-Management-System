@@ -1,4 +1,5 @@
 ﻿using Hospital_system.Data;
+using Hospital_system.Implementations;
 using Hospital_system.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -44,5 +45,29 @@ namespace Hospital_system.Controllers
              var stats = await dashboardService.GetDeptsStats();
             return Ok(stats);
         }
+
+
+        [HttpGet("GetPatientsNumber")]
+        public async Task<IActionResult> GetPatientsNumber()
+        {
+            var patientsNumber =await dashboardService.GetTotalPatients();
+            return Ok(patientsNumber);
+        }
+
+        [HttpGet("GetTotalStaff")]
+        public async Task<IActionResult> GetTotalStaff()
+        {
+            var StaffNumber = await dashboardService.GetTotalStaff();
+            return Ok(StaffNumber);
+        }
+
+        [HttpGet("GetAverageCost")]
+        public async Task<IActionResult> GetAverageCost()
+        {
+            var avgCost =  await dashboardService.GetAverageCost();
+            return Ok(avgCost);
+        }
+
+
     }
 }

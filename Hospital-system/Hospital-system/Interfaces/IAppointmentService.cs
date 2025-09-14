@@ -5,6 +5,7 @@ namespace Hospital_system.Interfaces
 {
     public interface IAppointmentService
     {
+        public Task<List<AppScheduleDTO>> GetAppSchedulesAsync(string userId);
         public Task<GeneralResponse?> BookAppointment(AppointmentDTO appDTO);
 
     }

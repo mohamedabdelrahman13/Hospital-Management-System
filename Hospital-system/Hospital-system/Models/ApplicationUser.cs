@@ -7,10 +7,7 @@ namespace Hospital_system.Models
     public class ApplicationUser : IdentityUser
     {
         public int FailedLoginAttempts { get; set; } = 0;
-
-        //[ForeignKey("DoctorProfile")]
-        //public string DoctorId { get; set; }
-        //[JsonIgnore]
-        //public virtual Doctor DoctorProfile { get; set; }
+        [JsonIgnore]
+        public virtual Doctor DoctorProfile { get; set; }
     }
 }

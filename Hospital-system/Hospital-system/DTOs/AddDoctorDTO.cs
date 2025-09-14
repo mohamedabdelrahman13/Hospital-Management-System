@@ -4,10 +4,9 @@ namespace Hospital_system.DTOs
 {
     public class AddDoctorDTO
     {
-        public string Name { get; set; }
-        public string Phone { get; set; }
         public string DepartmentID { get; set; }
-        public string Address { get; set; }
+        public string UserId { get; set; }
         public decimal Cost { get; set; }
+        public List<ConsultationHourDTO> consultationHourDTOs { get; set; }
     }
 }

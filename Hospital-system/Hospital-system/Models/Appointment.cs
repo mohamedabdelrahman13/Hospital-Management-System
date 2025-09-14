@@ -14,12 +14,14 @@ namespace Hospital_system.Models
         public DateTime BookedAt { get; set; } = DateTime.Now;
 
         public decimal Cost { get; set; }
-        public bool isScheduled { get; set; }
 
-        [ForeignKey("Doctor")]
-        public string doctorID { get; set; }
+        [MaxLength(11)]
+        public string Status { get; set; } = "Scheduled";
+        public string DoctorUserID { get; set; }
+
+        [ForeignKey(nameof(DoctorUserID))]
         [JsonIgnore]
-        public virtual Doctor Doctor { get; set; }
+        public virtual ApplicationUser doctorUser { get; set; }
 
 
         [ForeignKey("Patient")]
@@ -32,5 +34,6 @@ namespace Hospital_system.Models
         public string? ConsultationHourID { get; set; }
         [JsonIgnore]
         public virtual ConsultationHour ConsultationHour { get; set; }
+
     }
 }

@@ -4,6 +4,7 @@ using Hospital_system.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital_system.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250911221449_removeAddress")]
+    partial class removeAddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,20 +117,18 @@ namespace Hospital_system.Migrations
                     b.Property<DateOnly?>("Date")
                         .HasColumnType("date");
 
-                    b.Property<string>("DoctorUserID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<TimeOnly?>("EndTime")
                         .HasColumnType("time");
 
                     b.Property<TimeOnly>("StartTime")
                         .HasColumnType("time");
 
-                    b.Property<string>("Status")
+                    b.Property<string>("doctorID")
                         .IsRequired()
-                        .HasMaxLength(11)
-                        .HasColumnType("nvarchar(11)");
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("isScheduled")
+                        .HasColumnType("bit");
 
                     b.Property<string>("patientID")
                         .IsRequired()
@@ -137,7 +138,7 @@ namespace Hospital_system.Migrations
 
                     b.HasIndex("ConsultationHourID");
 
-                    b.HasIndex("DoctorUserID");
+                    b.HasIndex("doctorID");
 
                     b.HasIndex("patientID");
 
@@ -201,12 +202,20 @@ namespace Hospital_system.Migrations
                         .HasDefaultValueSql("NEWID()");
 
                     b.Property<decimal>("Cost")
-                        .HasMaxLength(40)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("DepartmentID")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -399,9 +408,9 @@ namespace Hospital_system.Migrations
                         .WithMany()
                         .HasForeignKey("ConsultationHourID");
 
-                    b.HasOne("Hospital_system.Models.ApplicationUser", "doctorUser")
+                    b.HasOne("Hospital_system.Models.Doctor", "Doctor")
                         .WithMany()
-                        .HasForeignKey("DoctorUserID")
+                        .HasForeignKey("doctorID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -413,9 +422,9 @@ namespace Hospital_system.Migrations
 
                     b.Navigation("ConsultationHour");
 
-                    b.Navigation("Patient");
+                    b.Navigation("Doctor");
 
-                    b.Navigation("doctorUser");
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("Hospital_system.Models.ConsultationHour", b =>

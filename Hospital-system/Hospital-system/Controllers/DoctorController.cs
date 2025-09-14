@@ -4,6 +4,7 @@ using Hospital_system.Helpers;
 using Hospital_system.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hospital_system.Controllers
 {
@@ -21,14 +22,23 @@ namespace Hospital_system.Controllers
             this.context = context;
             this.docService = docService;
         }
-        [HttpGet("GetAllDoctors")]
-        public async Task<IActionResult> GetAllDoctors()
+        [HttpGet("GetAllDoctorsWithoutProfile")]
+        public async Task<IActionResult> GetAllDoctorsWithoutProfile()
         {
-
-            var doctors = await docService.GetAllDoctors();
+            var doctors = await docService.GetAllDoctorsWithoutProfile();
             if (doctors.Count == 0) 
             {
-                return NotFound();
+                return Ok(doctors);
+            }
+            return Ok(doctors);
+        }
+        [HttpGet("GetAllDoctorsWithProfile")]
+        public async Task<IActionResult> GetAllDoctorsWithProfile()
+        {
+            var doctors = await docService.GetAllDoctorsWithProfile();
+            if (doctors.Count == 0) 
+            {
+                return Ok(doctors);
             }
             return Ok(doctors);
         }
@@ -37,20 +47,31 @@ namespace Hospital_system.Controllers
         public async Task<IActionResult> GetDoctorById(string id)
         {
 
-           var doc = await docService.GetDoctorById(id);
+            var doc = await docService.GetDoctorById(id);
             return Ok(doc);
         }
 
 
-        [HttpGet("GetDoctorsBySpeciality")]
-        public async Task<IActionResult> GetDoctorsBySpeciality(string speciality)
+        //[HttpGet("GetDoctorsBySpeciality")]
+        //public async Task<IActionResult> GetDoctorsBySpeciality(string speciality)
+        //{
+        //    var doctors = await docService.GetDoctorBySpeciality(speciality);
+        //    if (doctors.Count == 0) 
+        //    {
+        //        return NotFound();
+        //    }
+        //    return Ok(doctors);
+        //}
+
+        [HttpGet("GetDoctorByUserID/{id}")]
+        public async Task<IActionResult> GetDoctorByUserID(string id)
         {
-            var doctors = await docService.GetDoctorBySpeciality(speciality);
-            if (doctors.Count == 0) 
+            var doctor = await docService.GetDoctorByUserId(id);
+            if (doctor == null)
             {
                 return NotFound();
             }
-            return Ok(doctors);
+            return Ok(doctor);
         }
 
         [HttpPost("AddDoctor")]

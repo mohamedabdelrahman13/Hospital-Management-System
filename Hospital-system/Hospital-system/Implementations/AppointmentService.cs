@@ -4,6 +4,7 @@ using Hospital_system.Helpers;
 using Hospital_system.Interfaces;
 using Hospital_system.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital_system.Implementations
@@ -13,28 +14,32 @@ namespace Hospital_system.Implementations
         private readonly IBaseRepository<Appointment> appRepo;
         private readonly IBaseRepository<Doctor> docRepo;
         private readonly IMapper mapper;
+        private readonly UserManager<ApplicationUser> userManager;
 
         public AppointmentService(IBaseRepository<Appointment> appRepo 
             ,IBaseRepository<Doctor> docRepo
-            ,IMapper mapper)
+            ,IMapper mapper
+            ,UserManager<ApplicationUser> userManager)
         {
             this.appRepo = appRepo;
             this.docRepo = docRepo;
             this.mapper = mapper;
+            this.userManager = userManager;
         }
-        public async Task<GeneralResponse?> BookAppointment(AppointmentDTO appDTO) 
+        public async Task<GeneralResponse?> BookAppointment(AppointmentDTO appDTO)
         {
             //first: check if the doctor exists
-            var doctorDto = new DoctorDTO();
-            var doctorFromDb = await docRepo.GetByID(appDTO.DoctorID);
-            if(doctorFromDb != null)
+            var doctorDto = new UserWithDoctorDTO();
+            var doctorFromDb =await userManager.FindByIdAsync(appDTO.DoctorID);
+            //var doctorFromDb = await docRepo.GetByID(appDTO.DoctorID);
+            if (doctorFromDb != null)
             {
                 //map
-               doctorDto = mapper.Map<DoctorDTO>(doctorFromDb);
+                doctorDto = mapper.Map<UserWithDoctorDTO>(doctorFromDb);
                 var AppointmentDay = appDTO.Date.DayOfWeek.ToString();
 
                 //find if doctor works on that day or not 
-                var consultation = doctorDto.ConsultationHours
+                var consultation = doctorDto.DoctorProfile?.ConsultationHours
                     .FirstOrDefault(ch => ch.DayOfWeek == AppointmentDay);
 
                 if (consultation == null)
@@ -54,10 +59,10 @@ namespace Hospital_system.Implementations
                 //check if the appointment is booked or free 
 
                 var Appointments = await appRepo.GetAll().ToListAsync();
-                if (Appointments != null) 
+                if (Appointments != null)
                 {
                     var isbooked = Appointments.Any(a =>
-                    a.doctorID == doctorDto.Id &&
+                    a.DoctorUserID == doctorDto.Id &&
                     a.Date == appDTO.Date &&
                     ((appDTO.StartTime >= a.StartTime && appDTO.StartTime < a.EndTime) ||
                       (appDTO.EndTime > a.StartTime && appDTO.EndTime <= a.EndTime))
@@ -76,14 +81,13 @@ namespace Hospital_system.Implementations
                     //to be modified
                     var app = new Appointment()
                     {
-                        doctorID = doctorDto.Id,
+                        DoctorUserID = doctorDto.Id,
                         patientID = appDTO.PatientID,
                         Date = appDTO.Date,
                         StartTime = appDTO.StartTime,
                         EndTime = appDTO.EndTime,
                         BookedAt = DateTime.Now,
-                        isScheduled = true,
-                        Cost = appDTO.Cost, 
+                        Cost = appDTO.Cost,
                     };
 
                     await appRepo.AddAsync(app);
@@ -111,6 +115,15 @@ namespace Hospital_system.Implementations
             };
 
 
+        }
+
+        public async Task<List<AppScheduleDTO>> GetAppSchedulesAsync(string userId)
+        {
+            var apps = await appRepo.GetAll().Where(a => a.DoctorUserID == userId).ToListAsync();
+            
+            var appsDTO = mapper.Map<List<AppScheduleDTO>>(apps);
+
+            return appsDTO;
         }
     }
 }

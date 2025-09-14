@@ -110,6 +110,28 @@
         }
       }
     },
+    "/api/Appointment/GetAppointmentByUserId/{id}": {
+      "get": {
+        "tags": [
+          "Appointment"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Dashboard/GetPatientsStats/{view}": {
       "get": {
         "tags": [
@@ -188,6 +210,42 @@
         }
       }
     },
+    "/api/Dashboard/GetPatientsNumber": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Dashboard/GetTotalStaff": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Dashboard/GetAverageCost": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Department/GetAllDepartments": {
       "get": {
         "tags": [
@@ -222,7 +280,19 @@
         }
       }
     },
-    "/api/Doctor/GetAllDoctors": {
+    "/api/Doctor/GetAllDoctorsWithoutProfile": {
+      "get": {
+        "tags": [
+          "Doctor"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Doctor/GetAllDoctorsWithProfile": {
       "get": {
         "tags": [
           "Doctor"
@@ -256,15 +326,16 @@
         }
       }
     },
-    "/api/Doctor/GetDoctorsBySpeciality": {
+    "/api/Doctor/GetDoctorByUserID/{id}": {
       "get": {
         "tags": [
           "Doctor"
         ],
         "parameters": [
           {
-            "name": "speciality",
-            "in": "query",
+            "name": "id",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
             }
@@ -432,25 +503,24 @@
       "AddDoctorDTO": {
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "phone": {
-            "type": "string",
-            "nullable": true
-          },
           "departmentID": {
             "type": "string",
             "nullable": true
           },
-          "address": {
+          "userId": {
             "type": "string",
             "nullable": true
           },
           "cost": {
             "type": "number",
             "format": "double"
+          },
+          "consultationHourDTOs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConsultationHourDTO"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -485,6 +555,24 @@
           "cost": {
             "type": "number",
             "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ConsultationHourDTO": {
+        "type": "object",
+        "properties": {
+          "dayOfWeek": {
+            "type": "string",
+            "nullable": true
+          },
+          "startTime": {
+            "type": "string",
+            "format": "time"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "time"
           }
         },
         "additionalProperties": false

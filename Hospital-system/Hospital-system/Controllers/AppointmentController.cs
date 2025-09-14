@@ -30,5 +30,12 @@ namespace Hospital_system.Controllers
             });
 
         }
+
+        [HttpGet("GetAppointmentByUserId/{id}")]
+        public async Task<IActionResult> GetAppointmentByUserId(string id)
+        {
+            var apps = await appService.GetAppSchedulesAsync(id);
+            return Ok(apps);
+        }
     }
 }

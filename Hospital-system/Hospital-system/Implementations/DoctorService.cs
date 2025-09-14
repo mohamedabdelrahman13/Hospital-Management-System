@@ -4,6 +4,7 @@ using Hospital_system.DTOs;
 using Hospital_system.Helpers;
 using Hospital_system.Interfaces;
 using Hospital_system.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
@@ -13,12 +14,15 @@ namespace Hospital_system.Implementations
     {
         private readonly IBaseRepository<Doctor> doctorRepo;
         private readonly IMapper mapper;
+        private readonly UserManager<ApplicationUser> userManager;
 
         public DoctorService(IBaseRepository<Doctor> doctor
-            , IMapper mapper)
+            , IMapper mapper
+            ,UserManager<ApplicationUser> userManager)
         {
             this.doctorRepo = doctor;
             this.mapper = mapper;
+            this.userManager = userManager;
         }
 
         public async Task<GeneralResponse> AddDoctor(AddDoctorDTO doctor)
@@ -43,21 +47,44 @@ namespace Hospital_system.Implementations
             
         }
 
-        public async Task<List<DoctorDTO>?> GetAllDoctors()
+        public async Task<List<UserWithDoctorDTO>?> GetAllDoctorsWithoutProfile()
         {
-            var DoctorsFromDB = await doctorRepo.GetAll().ToListAsync();
-            if (DoctorsFromDB != null)
-            {
-                var doctorsDTOs = mapper.Map<List<DoctorDTO>>(DoctorsFromDB);
-                return doctorsDTOs;
-            }
-            return null;
+
+            var doctorsUsersDB = await userManager.GetUsersInRoleAsync("Doctor");
+
+            if (doctorsUsersDB == null)
+                return null;
+            var doctorsWithProfiles = doctorsUsersDB.Where(d => d.DoctorProfile == null).ToList();
+
+            if(doctorsWithProfiles == null)
+                return null;
+             var doctorsDTOs = mapper.Map<List<UserWithDoctorDTO>>(doctorsWithProfiles);
+
+
+            return doctorsDTOs;
+
+        }
+        public async Task<List<UserWithDoctorDTO>?> GetAllDoctorsWithProfile()
+        {
+
+            var doctorsUsersDB = await userManager.GetUsersInRoleAsync("Doctor");
+
+            if (doctorsUsersDB == null)
+                return null;
+            var doctorsWithProfiles = doctorsUsersDB.Where(d => d.DoctorProfile != null).ToList();
+
+            if(doctorsWithProfiles == null)
+                return null;
+             var doctorsDTOs = mapper.Map<List<UserWithDoctorDTO>>(doctorsWithProfiles);
+
+
+            return doctorsDTOs;
         }
 
-        public async Task<DoctorDTO> GetDoctorById(string id)
+        public async Task<UserWithDoctorDTO> GetDoctorById(string id)
         {
             var doctor = await doctorRepo.GetByID(id);
-            var doctorDTO = mapper.Map<DoctorDTO>(doctor);  
+            var doctorDTO = mapper.Map<UserWithDoctorDTO>(doctor);  
             return doctorDTO;
         }
 
@@ -70,6 +97,16 @@ namespace Hospital_system.Implementations
                 return doctorsDTOs;
             }
             return null;
+        }
+
+        public async Task<UserWithDoctorDTO> GetDoctorByUserId(string Id)
+        {
+            var user = await userManager.FindByIdAsync(Id);
+            var doctorDetails = mapper.Map<UserWithDoctorDTO>(user);
+         
+
+            return doctorDetails;
+
         }
     }
 }

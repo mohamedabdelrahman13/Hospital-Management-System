@@ -29,9 +29,24 @@ namespace Hospital_system.MappingProfiles
                 .ForMember(dest => dest.ConsultationHours, o => o.MapFrom(src => src.ConsultationHours))
                 .ForMember(dest => dest.Speciality, o => o.MapFrom(src => src.Department.Name));
 
-            CreateMap<AddDoctorDTO, Doctor>();
+            CreateMap<AddDoctorDTO, Doctor>()
+                .ForMember(dest => dest.UserId, o => o.MapFrom(src => src.UserId))
+                .ForMember(dest => dest.ConsultationHours , o=> o.MapFrom(src => src.consultationHourDTOs));
+
+            CreateMap<ApplicationUser, UserWithDoctorDTO>()
+                 .ForMember(dest => dest.DoctorProfile,opt => opt.MapFrom(src => src.DoctorProfile));
 
             CreateMap<RegisterDTO, ApplicationUser>();
+
+
+            CreateMap<Appointment, AppScheduleDTO>()
+                .ForMember(dest => dest.PatientName, o => o.MapFrom(src => src.Patient.Name))
+                .ForMember(dest => dest.DoctorName, o => o.MapFrom(src => src.doctorUser.UserName))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src =>
+                (src.Date.HasValue && src.EndTime.HasValue &&
+                 DateTime.Now > src.Date.Value.ToDateTime(src.EndTime.Value))
+                    ? "Completed"
+                    : src.Status));
         }
     }
 }

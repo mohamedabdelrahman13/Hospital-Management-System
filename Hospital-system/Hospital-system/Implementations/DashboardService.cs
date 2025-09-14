@@ -1,6 +1,7 @@
 ﻿using Hospital_system.DTOs;
 using Hospital_system.Interfaces;
 using Hospital_system.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Metrics;
 
@@ -11,14 +12,17 @@ namespace Hospital_system.Implementations
         private readonly IBaseRepository<Patient> patientRepo;
         private readonly IBaseRepository<Appointment> appRepo;
         private readonly IBaseRepository<Department> deptRepo;
+        private readonly UserManager<ApplicationUser> userManager;
 
         public DashboardService(IBaseRepository<Patient> patientRepo 
             ,IBaseRepository<Appointment> appRepo
-            ,IBaseRepository<Department> deptRepo)
+            ,IBaseRepository<Department> deptRepo
+            ,UserManager<ApplicationUser> userManager)
         {
             this.patientRepo = patientRepo;
             this.appRepo = appRepo;
             this.deptRepo = deptRepo;
+            this.userManager = userManager;
         }
 
         public async Task<List<AppointmentsStatsDTO>> GetAppointmentsStats(string view)
@@ -50,7 +54,7 @@ namespace Hospital_system.Implementations
 
         public async Task<List<DepartmentsStatsDTO>> GetDeptsStats()
         {
-            var depts = await appRepo.GetAll().GroupBy(a => a.Doctor.Department.Name)
+            var depts = await appRepo.GetAll().GroupBy(a => a.doctorUser.DoctorProfile.Department.Name)
                      .Select(g => new DepartmentsStatsDTO
                      {
                          Department = g.Key,
@@ -112,6 +116,29 @@ namespace Hospital_system.Implementations
 
             return MonthlyStats;
         }
+
+        public async Task<int> GetTotalPatients()
+        {
+            var patientsNumber = await patientRepo.GetAll().CountAsync();
+           
+            return patientsNumber;
+           
+        }
+        public async Task<int> GetTotalStaff()
+        {
+            var Staff = await userManager.GetUsersInRoleAsync("Staff");
+            var StaffNumber = Staff.Count();
+            return StaffNumber;
+          
+        }
+        public async Task<decimal> GetAverageCost()
+        {
+            var AvgCost = await appRepo.GetAll().Select(a=>a.Cost).AverageAsync();
+
+            return Math.Round(AvgCost , 2);
+          
+        }
+   
 
 
         //public async Task<List<dynamic>> GetPatientsByDay()
