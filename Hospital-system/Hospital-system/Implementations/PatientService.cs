@@ -20,21 +20,25 @@ namespace Hospital_system.Implementations
         }
 
 
-        public async Task<List<Patient>> GetAllPatients()
+        public async Task<List<PatientDTO>> GetAllPatients()
         {
             var patients = await patientRepo.GetAll().ToListAsync();
-            return patients;
+            var patientsDTO = mapper.Map<List<PatientDTO>>(patients);
+            return patientsDTO;
         }
-        public async Task<Patient?> GetPatientByID(string id)
+
+        public async Task<PatientDTO?> GetPatientByID(string id)
         {
-            var patient =await patientRepo.GetByID(id);
-            if (patient == null) 
+            var patientFromDB =await patientRepo.GetByID(id);
+            if (patientFromDB == null) 
             {
                 return null;
             }
-            return patient;
+            var patientDTO = mapper.Map<PatientDTO>(patientFromDB);
+            return patientDTO;
             
         }
+
         public async Task<List<Patient>?> SearchPatientsByName(string queryText)
         {
             var patients =await patientRepo.GetAll().Where(p => p.Name.Contains(queryText)).ToListAsync();
@@ -45,20 +49,24 @@ namespace Hospital_system.Implementations
             return null;
 
         }
-        public async Task AddPatient(PatientDTO patientDTO)
+
+        public async Task AddPatient(CreatePatientDTO createpatientDTO)
         {
             //mapping 
-            var PatientFromDB = mapper.Map<Patient>(patientDTO);
+            var PatientFromDB = mapper.Map<Patient>(createpatientDTO);
             //adding
             await patientRepo.AddAsync(PatientFromDB);
             //saving
             await patientRepo.SaveAsync();
         }
 
-        public async Task EditPatient(Patient patient)
+        public async Task EditPatient(UpdatePatientDTO updatePatientDTO)
         {
+            var patientFromDB = await patientRepo.GetByID(updatePatientDTO.Id);
+            //mapping
+            var updatedPatientFromDB = mapper.Map(updatePatientDTO, patientFromDB);
             //updating
-            patientRepo.Update(patient);
+            patientRepo.Update(patientFromDB);
             //saving..
             await patientRepo.SaveAsync(); 
         }

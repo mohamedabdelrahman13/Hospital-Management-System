@@ -2,7 +2,8 @@
 {
     public class AppointmentsStatsDTO
     {
-        public int NumberOfAppointments {  get; set; }
         public string Time { get; set; }
+        public int NumberOfAppointments {  get; set; }
+        public double Percentage { get; set; }
     }
 }

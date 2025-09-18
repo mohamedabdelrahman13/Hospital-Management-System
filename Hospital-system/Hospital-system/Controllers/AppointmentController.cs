@@ -31,6 +31,21 @@ namespace Hospital_system.Controllers
 
         }
 
+        [HttpPost("CheckAvailability")]
+        public async Task<IActionResult> CheckAvailability([FromBody]AppointmentDTO appointment)
+        {
+            var result = await appService.CheckAvailability(appointment);
+
+            return Ok(new GeneralResponse
+            {
+                StatusCode = result.StatusCode,
+                Message = result.Message
+            });
+
+        }
+
+
+
         [HttpGet("GetAppointmentByUserId/{id}")]
         public async Task<IActionResult> GetAppointmentByUserId(string id)
         {

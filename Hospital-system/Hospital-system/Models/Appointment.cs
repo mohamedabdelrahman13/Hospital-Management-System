@@ -13,6 +13,7 @@ namespace Hospital_system.Models
         public TimeOnly? EndTime { get; set; }
         public DateTime BookedAt { get; set; } = DateTime.Now;
 
+        [Range(200, 1500, ErrorMessage = "Cost must be between 200 and 1500.")]
         public decimal Cost { get; set; }
 
         [MaxLength(11)]

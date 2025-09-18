@@ -1,11 +1,13 @@
 ﻿using Hospital_system.Data;
 using Hospital_system.Implementations;
 using Hospital_system.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital_system.Controllers
 {
+    //[Authorize(Roles = "Admin,Doctor")]
     [Route("api/[controller]")]
     [ApiController]
     public class DashboardController : ControllerBase

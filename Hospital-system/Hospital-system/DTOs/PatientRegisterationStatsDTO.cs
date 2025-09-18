@@ -4,6 +4,7 @@
     {
         public int NumberOfPatients { get; set; }
         public string Time { get; set; }
+        public double Percentage { get; set; }
 
     }
 }

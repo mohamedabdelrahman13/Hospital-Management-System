@@ -27,24 +27,28 @@ namespace Hospital_system.Implementations
 
         public async Task<List<AppointmentsStatsDTO>> GetAppointmentsStats(string view)
         {
+            var totalNumberOfAppointments = appRepo.GetAll().Count();
+
             if (view == "daily")
             {
                 var DailyStats = await appRepo.GetAll().GroupBy(a => a.BookedAt.Date)
                     .Select(g => new AppointmentsStatsDTO
                     {
                         Time = g.Key.ToString("yyyy-MM-dd"),
-                        NumberOfAppointments = g.Count()
+                        NumberOfAppointments = g.Count(),
+                        Percentage = Math.Round((double)g.Count() / totalNumberOfAppointments * 100 , 1)
                     })
                     .ToListAsync();
 
                 return DailyStats;
             }
 
-            var MonthlyStats = await appRepo.GetAll().GroupBy(a => a.BookedAt.Date)
+            var MonthlyStats = await appRepo.GetAll().GroupBy(a => new { a.BookedAt.Year, a.BookedAt.Month })
                    .Select(g => new AppointmentsStatsDTO
                    {
                        Time = g.Key.Year + "-" + g.Key.Month.ToString("D2"),
                        NumberOfAppointments = g.Count(),
+                       Percentage = (g.Count() / totalNumberOfAppointments)*100
                    })
                    .ToListAsync();
 
@@ -66,13 +70,15 @@ namespace Hospital_system.Implementations
 
         public async Task<List<PatientRegisterationStatsDTO>> GetPatientsStats(string view)
         {
+            var totalNumberOfPatients = await GetTotalPatients();
             if (view == "daily")
             {
                 var dailyStats = await patientRepo.GetAll().GroupBy(p => p.CreatedOn)
                     .Select(g => new PatientRegisterationStatsDTO
                     {
                         Time = g.Key.ToString("yyyy-MM-dd"),
-                        NumberOfPatients = g.Count()
+                        NumberOfPatients = g.Count(),
+                        Percentage = Math.Round((double)g.Count() / totalNumberOfPatients * 100, 1)
                     })
                     .ToListAsync();
 
@@ -80,11 +86,13 @@ namespace Hospital_system.Implementations
             }
 
 
-            var monthlyStats = await patientRepo.GetAll().GroupBy(p => p.CreatedOn.Month)
+            var monthlyStats = await patientRepo.GetAll().GroupBy(p => new { p.CreatedOn.Year, p.CreatedOn.Month })
                .Select(g => new PatientRegisterationStatsDTO
                {
-                   Time = g.Key.ToString(),
-                   NumberOfPatients = g.Count()
+                   Time = g.Key.Year + "-" + g.Key.Month.ToString("D2"),
+                   //Time = g.Key.ToString(),
+                   NumberOfPatients = g.Count(),
+                    Percentage = Math.Round((double)g.Count() / totalNumberOfPatients * 100, 1)
                })
                .ToListAsync();
 

@@ -13,6 +13,22 @@ namespace Hospital_system.MappingProfiles
                 
             CreateMap<PatientDTO , Patient>();
 
+            CreateMap<CreatePatientDTO, Patient>()
+                .ForMember(dest => dest.CreatedOn, o => o.Ignore());
+
+            CreateMap<UpdatePatientDTO, Patient>();
+
+            CreateMap<Patient , PatientDTO>()
+                .ForMember(dest => dest.invoices, o => o.MapFrom(src=>src.invoices));
+
+            CreateMap<InvoiceModel, InvoiceDTO>()
+                 .ForMember(dest => dest.Payments,
+                     opt => opt.MapFrom(src => src.Payments))
+                 .ForMember(dest => dest.DoctorName, o => o.MapFrom(src => src.doctorUser.UserName));
+            
+
+            CreateMap<Payment, PaymentDTO>();
+
             CreateMap<ConsultationHour, ConsultationHourDTO>()
                 .ForMember(dest => dest.DayOfWeek, o => o.MapFrom(src => src.DayOfWeek.ToString()))
                 .ForMember(dest => dest.StartTime, o => o.MapFrom(src => src.StartTime))
@@ -47,6 +63,7 @@ namespace Hospital_system.MappingProfiles
                  DateTime.Now > src.Date.Value.ToDateTime(src.EndTime.Value))
                     ? "Completed"
                     : src.Status));
+          
         }
     }
 }

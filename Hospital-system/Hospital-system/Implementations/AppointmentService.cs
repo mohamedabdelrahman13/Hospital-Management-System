@@ -28,13 +28,37 @@ namespace Hospital_system.Implementations
         }
         public async Task<GeneralResponse?> BookAppointment(AppointmentDTO appDTO)
         {
+            //to be modified
+            var app = new Appointment()
+            {
+                DoctorUserID = appDTO.DoctorID,
+                patientID = appDTO.PatientID,
+                Date = appDTO.Date,
+                StartTime = appDTO.StartTime,
+                EndTime = appDTO.EndTime,
+                BookedAt = DateTime.Now,
+                Cost = appDTO.Cost,
+            };
+
+            await appRepo.AddAsync(app);
+            await appRepo.SaveAsync();
+            return new GeneralResponse
+            {
+                StatusCode = 200,
+                Message = "Appointment is booked Successfully!"
+            };
+
+        }
+
+        public async Task<GeneralResponse?> CheckAvailability(AppointmentDTO appDTO)
+        {
             //first: check if the doctor exists
             var doctorDto = new UserWithDoctorDTO();
-            var doctorFromDb =await userManager.FindByIdAsync(appDTO.DoctorID);
+            var doctorFromDb = await userManager.FindByIdAsync(appDTO.DoctorID);
             //var doctorFromDb = await docRepo.GetByID(appDTO.DoctorID);
             if (doctorFromDb != null)
             {
-                //map
+                //map doctor to userDoctor to check its free consultation Hours
                 doctorDto = mapper.Map<UserWithDoctorDTO>(doctorFromDb);
                 var AppointmentDay = appDTO.Date.DayOfWeek.ToString();
 
@@ -77,29 +101,11 @@ namespace Hospital_system.Implementations
                         }
                    ;
                     }
-
-                    //to be modified
-                    var app = new Appointment()
-                    {
-                        DoctorUserID = doctorDto.Id,
-                        patientID = appDTO.PatientID,
-                        Date = appDTO.Date,
-                        StartTime = appDTO.StartTime,
-                        EndTime = appDTO.EndTime,
-                        BookedAt = DateTime.Now,
-                        Cost = appDTO.Cost,
-                    };
-
-                    await appRepo.AddAsync(app);
-                    await appRepo.SaveAsync();
-
-
                     return new GeneralResponse
                     {
                         StatusCode = 200,
-                        Message = "Appointment has been booked successfully!"
+                        Message = "Available"
                     };
-
                 }
                 return new GeneralResponse
                 {

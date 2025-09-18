@@ -27,7 +27,7 @@ namespace Hospital_system.Controllers
         }
 
         [HttpPost("AddPatient")]
-        public async Task<IActionResult> AddPatient(PatientDTO patientDTO)
+        public async Task<IActionResult> AddPatient(CreatePatientDTO patientDTO)
         {
             await patientService.AddPatient(patientDTO);
             return Ok(new GeneralResponse
@@ -59,7 +59,7 @@ namespace Hospital_system.Controllers
 
 
         [HttpPut("EditPatient")]
-        public async Task<IActionResult> EditPatient(Patient patient)
+        public async Task<IActionResult> EditPatient(UpdatePatientDTO patient)
         {
             await patientService.EditPatient(patient);
             return Ok(new GeneralResponse

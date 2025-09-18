@@ -222,6 +222,43 @@ namespace Hospital_system.Migrations
                     b.ToTable("doctors");
                 });
 
+            modelBuilder.Entity("Hospital_system.Models.InvoiceModel", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DoctorUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PatientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Speciality")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorUserId");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("invoices");
+                });
+
             modelBuilder.Entity("Hospital_system.Models.Patient", b =>
                 {
                     b.Property<string>("Id")
@@ -256,6 +293,38 @@ namespace Hospital_system.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("patients");
+                });
+
+            modelBuilder.Entity("Hospital_system.Models.Payment", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InvoiceId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StripePaymentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvoiceId");
+
+                    b.ToTable("payments");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -446,6 +515,34 @@ namespace Hospital_system.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Hospital_system.Models.InvoiceModel", b =>
+                {
+                    b.HasOne("Hospital_system.Models.ApplicationUser", "doctorUser")
+                        .WithMany()
+                        .HasForeignKey("DoctorUserId");
+
+                    b.HasOne("Hospital_system.Models.Patient", "Patient")
+                        .WithMany("invoices")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
+
+                    b.Navigation("doctorUser");
+                });
+
+            modelBuilder.Entity("Hospital_system.Models.Payment", b =>
+                {
+                    b.HasOne("Hospital_system.Models.InvoiceModel", "Invoice")
+                        .WithMany("Payments")
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Invoice");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -511,6 +608,16 @@ namespace Hospital_system.Migrations
             modelBuilder.Entity("Hospital_system.Models.Doctor", b =>
                 {
                     b.Navigation("ConsultationHours");
+                });
+
+            modelBuilder.Entity("Hospital_system.Models.InvoiceModel", b =>
+                {
+                    b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("Hospital_system.Models.Patient", b =>
+                {
+                    b.Navigation("invoices");
                 });
 #pragma warning restore 612, 618
         }

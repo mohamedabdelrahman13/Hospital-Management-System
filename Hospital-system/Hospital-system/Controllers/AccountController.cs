@@ -2,6 +2,7 @@
 using Hospital_system.DTOs;
 using Hospital_system.Helpers;
 using Hospital_system.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +31,7 @@ namespace Hospital_system.Controllers
             this.roleManager = roleManager;
         }
 
+       
 
         [HttpPost("Register")]
         public async Task<IActionResult> Register(RegisterDTO registerDTO)
@@ -50,7 +52,7 @@ namespace Hospital_system.Controllers
                     });
                 }
 
-                return Ok(new GeneralResponse
+                return BadRequest(new GeneralResponse
                 {
                     StatusCode = 400,
                     Message = "role is not saved"
@@ -58,10 +60,12 @@ namespace Hospital_system.Controllers
                
             }
 
+            var errorMessage = string.Join(", ", res.Errors.Select(e => e.Description));
+
             return Ok(new GeneralResponse
             {
                 StatusCode = 400,
-                Message = res.Errors
+                Message =   errorMessage
             });
         }
 
@@ -89,6 +93,14 @@ namespace Hospital_system.Controllers
                 });
             }
 
+            // If lockout expired, reset attempts
+            if (user.LockoutEnd.HasValue && user.LockoutEnd <= DateTime.UtcNow)
+            {
+                user.FailedLoginAttempts = 0;
+                user.LockoutEnd = null;
+                await userManager.UpdateAsync(user);
+            }
+
             bool isFound = await userManager.CheckPasswordAsync(user, loginDTO.Password);
             if (!isFound)
             {
@@ -107,13 +119,12 @@ namespace Hospital_system.Controllers
                 });
             }
 
-            user.FailedLoginAttempts = 0; //reset failed login when user's password is correct;
-            user.LockoutEnd = null;
-
+            
             //creating the claims..
             var userClaims = new List<Claim>();
             userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
             userClaims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
+            userClaims.Add(new Claim("Id", user.Id));
             userClaims.Add(new Claim(ClaimTypes.Name, user.UserName));
             userClaims.Add(new Claim("email", user.Email));
             var roles = await userManager.GetRolesAsync(user);

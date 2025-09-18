@@ -59,6 +59,22 @@
   },
   {
     "ContainingType": "Hospital_system.Controllers.AppointmentController",
+    "Method": "CheckAvailability",
+    "RelativePath": "api/Appointment/CheckAvailability",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "appointment",
+        "Type": "Hospital_system.DTOs.AppointmentDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Hospital_system.Controllers.AppointmentController",
     "Method": "GetAppointmentByUserId",
     "RelativePath": "api/Appointment/GetAppointmentByUserId/{id}",
     "HttpMethod": "GET",
@@ -256,6 +272,43 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Hospital_system.Controllers.InvoiceController",
+    "Method": "CreateInvoice",
+    "RelativePath": "api/Invoice/CreateInvoice",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "invoiceDTO",
+        "Type": "Hospital_system.DTOs.CreateInvoiceDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Hospital_system.Controllers.InvoiceController",
+    "Method": "MarkAsPaid",
+    "RelativePath": "api/Invoice/MarkPaid/{InvoiceId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "InvoiceId",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "paymentRequest",
+        "Type": "Hospital_system.DTOs.PaymentRequestDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Hospital_system.Controllers.PatientController",
     "Method": "AddPatient",
     "RelativePath": "api/Patient/AddPatient",
@@ -265,7 +318,7 @@
     "Parameters": [
       {
         "Name": "patientDTO",
-        "Type": "Hospital_system.DTOs.PatientDTO",
+        "Type": "Hospital_system.DTOs.CreatePatientDTO",
         "IsRequired": true
       }
     ],
@@ -281,7 +334,7 @@
     "Parameters": [
       {
         "Name": "patient",
-        "Type": "Hospital_system.Models.Patient",
+        "Type": "Hospital_system.DTOs.UpdatePatientDTO",
         "IsRequired": true
       }
     ],
@@ -324,6 +377,22 @@
       {
         "Name": "query",
         "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Hospital_system.Controllers.PaymentController",
+    "Method": "CreatePaymentIntent",
+    "RelativePath": "api/Payment/create-payment-intent",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Hospital_system.DTOs.PaymentIntentRequestDTO",
         "IsRequired": true
       }
     ],

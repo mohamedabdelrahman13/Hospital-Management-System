@@ -28,13 +28,15 @@ namespace Hospital_system.Data
                 }
             }
 
-            //Age Calculations
+            //Age Calculation from DOB 
             modelbuilder.Entity<Patient>()
             .Property<int>("Age")
             .HasComputedColumnSql("DATEDIFF(YEAR, BirthDate, GETDATE())");
         }
 
         public DbSet<Patient> patients { get; set; }
+        public DbSet<Payment> payments { get; set; }
+        public DbSet<InvoiceModel> invoices { get; set; }
         public DbSet<Doctor> doctors { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Department> departments { get; set; }

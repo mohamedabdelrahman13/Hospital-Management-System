@@ -7,6 +7,7 @@ namespace Hospital_system.Interfaces
     {
         public Task<List<AppScheduleDTO>> GetAppSchedulesAsync(string userId);
         public Task<GeneralResponse?> BookAppointment(AppointmentDTO appDTO);
+        public Task<GeneralResponse?> CheckAvailability(AppointmentDTO appDTO);
 
     }
 }

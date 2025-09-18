@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Hospital_system.Models
 {
@@ -15,6 +16,9 @@ namespace Hospital_system.Models
 
         [RegularExpression("^(Male|Female)$", ErrorMessage = "Gender must be either Male or Female")]
         public string Gender { get; set; }
+
+        [JsonIgnore]
+        public virtual List<InvoiceModel> invoices { get; set; }
 
     }
 }

@@ -80,7 +80,6 @@ F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospita
 F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
 F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\Microsoft.SqlServer.Server.dll
-F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\Microsoft.Win32.SystemEvents.dll
 F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\Mono.TextTemplating.dll
 F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\System.ClientModel.dll
 F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\System.CodeDom.dll
@@ -90,13 +89,10 @@ F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospita
 F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\System.Composition.Runtime.dll
 F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\System.Composition.TypedParts.dll
 F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\System.Configuration.ConfigurationManager.dll
-F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\System.Drawing.Common.dll
 F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
 F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\System.Memory.Data.dll
 F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\System.Runtime.Caching.dll
 F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\System.Security.Cryptography.ProtectedData.dll
-F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\System.Security.Permissions.dll
-F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\System.Windows.Extensions.dll
 F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\cs\Microsoft.CodeAnalysis.resources.dll
 F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\de\Microsoft.CodeAnalysis.resources.dll
 F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\es\Microsoft.CodeAnalysis.resources.dll
@@ -168,9 +164,6 @@ F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospita
 F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
 F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
-F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
-F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
-F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
 F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
-F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
-F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\Newtonsoft.Json.dll
+F:\Hospital management system\Hospital-Management-System\Hospital-system\Hospital-system\bin\Debug\net9.0\Stripe.net.dll
