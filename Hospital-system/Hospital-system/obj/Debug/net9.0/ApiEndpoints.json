@@ -90,6 +90,38 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Hospital_system.Controllers.AppointmentController",
+    "Method": "MarkCancelled",
+    "RelativePath": "api/Appointment/MarkCancelled/{appId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "appId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Hospital_system.Controllers.AppointmentController",
+    "Method": "MarkCompleted",
+    "RelativePath": "api/Appointment/MarkCompleted/{appId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "appId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Hospital_system.Controllers.DashboardController",
     "Method": "GetAppointmentsStats",
     "RelativePath": "api/Dashboard/GetAppointmentsStats/{view}",
@@ -232,11 +264,17 @@
   {
     "ContainingType": "Hospital_system.Controllers.DoctorController",
     "Method": "GetAllDoctorsWithProfile",
-    "RelativePath": "api/Doctor/GetAllDoctorsWithProfile",
+    "RelativePath": "api/Doctor/GetAllDoctorsWithProfile/{speciality}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "speciality",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {

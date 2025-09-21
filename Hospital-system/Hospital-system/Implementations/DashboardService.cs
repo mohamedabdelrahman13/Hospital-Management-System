@@ -146,6 +146,11 @@ namespace Hospital_system.Implementations
             return Math.Round(AvgCost , 2);
           
         }
+        public decimal GetTotalCost()
+        {
+            var TotalRevenue = appRepo.GetAll().Sum(a=>a.Cost);
+            return Math.Round(TotalRevenue, 2); 
+        }
    
 
 

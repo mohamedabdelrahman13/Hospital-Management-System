@@ -14,6 +14,7 @@ using System.Text;
 
 namespace Hospital_system.Controllers
 {
+    [Authorize(Roles ="Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
@@ -31,7 +32,6 @@ namespace Hospital_system.Controllers
             this.roleManager = roleManager;
         }
 
-       
 
         [HttpPost("Register")]
         public async Task<IActionResult> Register(RegisterDTO registerDTO)
@@ -69,7 +69,7 @@ namespace Hospital_system.Controllers
             });
         }
 
-
+        [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginDTO loginDTO)
         {
@@ -143,7 +143,7 @@ namespace Hospital_system.Controllers
                 issuer: "https://localhost:44363/",
                 audience: "https://localhost:44363/",
                 claims: userClaims,
-                expires: DateTime.Now.AddHours(1),
+                expires: DateTime.Now.AddHours(8),
                 signingCredentials: signCred
             );
 
@@ -152,7 +152,7 @@ namespace Hospital_system.Controllers
             {
                 StatusCode = 200,
                 Token = token,
-                expiryDate = DateTime.Now.AddHours(1),
+                expiryDate = DateTime.Now.AddHours(8),
             });
 
         }

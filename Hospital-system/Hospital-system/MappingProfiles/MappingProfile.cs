@@ -58,12 +58,10 @@ namespace Hospital_system.MappingProfiles
             CreateMap<Appointment, AppScheduleDTO>()
                 .ForMember(dest => dest.PatientName, o => o.MapFrom(src => src.Patient.Name))
                 .ForMember(dest => dest.DoctorName, o => o.MapFrom(src => src.doctorUser.UserName))
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src =>
-                (src.Date.HasValue && src.EndTime.HasValue &&
-                 DateTime.Now > src.Date.Value.ToDateTime(src.EndTime.Value))
-                    ? "Completed"
-                    : src.Status));
-          
+                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
+
+
+
         }
     }
 }

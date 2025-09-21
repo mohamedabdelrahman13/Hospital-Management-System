@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital_system.Controllers
 {
-    //[Authorize(Roles = "Admin,Doctor")]
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class DashboardController : ControllerBase
@@ -69,7 +69,7 @@ namespace Hospital_system.Controllers
             var avgCost =  await dashboardService.GetAverageCost();
             return Ok(avgCost);
         }
-
+     
 
     }
 }

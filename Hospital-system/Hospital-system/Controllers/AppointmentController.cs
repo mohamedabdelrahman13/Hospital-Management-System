@@ -1,6 +1,7 @@
 ﻿using Hospital_system.DTOs;
 using Hospital_system.Helpers;
 using Hospital_system.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,7 @@ namespace Hospital_system.Controllers
             this.appService = appService;
         }
 
-
+        [Authorize(Roles ="Staff")]
         [HttpPost("BookAppointment")]
         public async Task<IActionResult> BookAppointment([FromBody]AppointmentDTO appointment)
         {
@@ -30,7 +31,7 @@ namespace Hospital_system.Controllers
             });
 
         }
-
+        [Authorize(Roles = "Staff")]
         [HttpPost("CheckAvailability")]
         public async Task<IActionResult> CheckAvailability([FromBody]AppointmentDTO appointment)
         {
@@ -44,13 +45,53 @@ namespace Hospital_system.Controllers
 
         }
 
-
-
+        [Authorize(Roles = "Doctor")]
         [HttpGet("GetAppointmentByUserId/{id}")]
         public async Task<IActionResult> GetAppointmentByUserId(string id)
         {
             var apps = await appService.GetAppSchedulesAsync(id);
             return Ok(apps);
+        }
+
+
+        [HttpPost("MarkCompleted/{appId}")]
+        public async Task<IActionResult> MarkCompleted(string appId)
+        {
+            var result = await appService.MarkAsCompleted(appId);
+            if (result != null) 
+            {
+                return Ok(new GeneralResponse
+                {
+                    StatusCode = 200,
+                    Message = result.Message
+                });
+            }
+
+            return Ok(new GeneralResponse
+            {
+                StatusCode = 400,
+                Message = "failed to update status"
+            });
+        }
+
+        [HttpPost("MarkCancelled/{appId}")]
+        public async Task<IActionResult> MarkCancelled(string appId)
+        {
+            var result = await appService.MarkAsCancelled(appId);
+            if (result != null) 
+            {
+                return Ok(new GeneralResponse
+                {
+                    StatusCode = 200,
+                    Message = result.Message
+                });
+            }
+
+            return Ok(new GeneralResponse
+            {
+                StatusCode = 400,
+                Message = "failed to update status"
+            });
         }
     }
 }

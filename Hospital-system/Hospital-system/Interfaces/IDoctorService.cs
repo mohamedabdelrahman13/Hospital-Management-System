@@ -6,8 +6,8 @@ namespace Hospital_system.Interfaces
 {
     public interface IDoctorService
     {
-        public  Task<List<UserWithDoctorDTO>>? GetAllDoctorsWithoutProfile();
-        public  Task<List<UserWithDoctorDTO>>? GetAllDoctorsWithProfile();
+        public  Task<List<UserWithDoctorDTO>?> GetAllDoctorsWithoutProfile();
+        public  Task<List<UserWithDoctorDTO>?> GetAllDoctorsWithProfile(string speciality);
         public Task<List<DoctorDTO>> GetDoctorBySpeciality (string speciality);
         public Task<UserWithDoctorDTO> GetDoctorByUserId (string Id);
         public Task<UserWithDoctorDTO> GetDoctorById (string id);

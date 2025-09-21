@@ -2,12 +2,14 @@
 using Hospital_system.Helpers;
 using Hospital_system.Interfaces;
 using Hospital_system.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace Hospital_system.Controllers
 {
+    [Authorize(Roles = "Staff")]
     [Route("api/[controller]")]
     [ApiController]
     public class PatientController : ControllerBase

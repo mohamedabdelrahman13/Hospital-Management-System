@@ -1,12 +1,14 @@
 ﻿using Hospital_system.DTOs;
 using Hospital_system.Implementations;
 using Hospital_system.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 
 namespace Hospital_system.Controllers
 {
+    [Authorize(Roles = "Staff")]
     [Route("api/[controller]")]
     [ApiController]
     public class PaymentController : ControllerBase

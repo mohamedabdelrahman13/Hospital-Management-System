@@ -54,6 +54,7 @@ namespace Hospital_system.Implementations
 
             if (doctorsUsersDB == null)
                 return null;
+
             var doctorsWithProfiles = doctorsUsersDB.Where(d => d.DoctorProfile == null).ToList();
 
             if(doctorsWithProfiles == null)
@@ -64,14 +65,14 @@ namespace Hospital_system.Implementations
             return doctorsDTOs;
 
         }
-        public async Task<List<UserWithDoctorDTO>?> GetAllDoctorsWithProfile()
+        public async Task<List<UserWithDoctorDTO>?> GetAllDoctorsWithProfile(string speciality)
         {
 
             var doctorsUsersDB = await userManager.GetUsersInRoleAsync("Doctor");
 
             if (doctorsUsersDB == null)
                 return null;
-            var doctorsWithProfiles = doctorsUsersDB.Where(d => d.DoctorProfile != null).ToList();
+            var doctorsWithProfiles = doctorsUsersDB.Where(d => d.DoctorProfile != null && d.DoctorProfile.Department.Name == speciality).ToList();
 
             if(doctorsWithProfiles == null)
                 return null;

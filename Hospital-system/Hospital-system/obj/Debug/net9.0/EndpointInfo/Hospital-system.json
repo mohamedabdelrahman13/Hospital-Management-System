@@ -163,6 +163,50 @@
         }
       }
     },
+    "/api/Appointment/MarkCompleted/{appId}": {
+      "post": {
+        "tags": [
+          "Appointment"
+        ],
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Appointment/MarkCancelled/{appId}": {
+      "post": {
+        "tags": [
+          "Appointment"
+        ],
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Dashboard/GetPatientsStats/{view}": {
       "get": {
         "tags": [
@@ -323,10 +367,20 @@
         }
       }
     },
-    "/api/Doctor/GetAllDoctorsWithProfile": {
+    "/api/Doctor/GetAllDoctorsWithProfile/{speciality}": {
       "get": {
         "tags": [
           "Doctor"
+        ],
+        "parameters": [
+          {
+            "name": "speciality",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "200": {
