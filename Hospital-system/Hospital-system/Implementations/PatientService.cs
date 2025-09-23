@@ -42,11 +42,11 @@ namespace Hospital_system.Implementations
         public async Task<List<Patient>?> SearchPatientsByName(string queryText)
         {
             var patients =await patientRepo.GetAll().Where(p => p.Name.Contains(queryText)).ToListAsync();
-            if (patients!=null) 
+            if (patients.Any()) 
             {
                 return patients;
             }
-            return null;
+            return [];
 
         }
 

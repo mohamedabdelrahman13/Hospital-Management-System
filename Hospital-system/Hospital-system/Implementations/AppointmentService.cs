@@ -133,46 +133,39 @@ namespace Hospital_system.Implementations
 
         }
 
-        public async Task<List<AppScheduleDTO>> GetAppSchedulesAsync(string userId)
+        public async Task<List<DateOnly?>> GetAllAppsDates()
         {
-            var apps = await appRepo.GetAll().Where(a => a.DoctorUserID == userId).OrderBy(a => a.Date).ToListAsync();          
+            var dates = await appRepo.GetAll().Select(a => a.Date).Distinct().ToListAsync();
+            return dates;
+        }
+
+        public async Task<List<AppScheduleDTO>> GetAppSchedulesByDateAsync(string userId , DateOnly appDate)
+        {
+            var apps = await appRepo.GetAll()
+                .Where(a => a.DoctorUserID == userId && a.Date == appDate)
+                .OrderBy(a => a.Date)
+                .ToListAsync();         
+            
             var appsDTO = mapper.Map<List<AppScheduleDTO>>(apps);
             return appsDTO;
         }
-
-        public async Task<GeneralResponse?> MarkAsCompleted(string appId)
+        public async Task<GeneralResponse?> ModifyAppStatus(string appId , string status)
         {
             var appFromDb =await appRepo.GetByID(appId);
 
             if (appFromDb == null)
                 return null;
 
-            appFromDb.Status = "Completed";
+            appFromDb.Status = status;
            appRepo.Update(appFromDb);
            await appRepo.SaveAsync();
 
             return new GeneralResponse
             {
                 StatusCode = 200,
-                Message = "status updated"
+                Message = "Status updated"
             };
         }
-        public async Task<GeneralResponse?> MarkAsCancelled(string appId)
-        {
-            var appFromDb =await appRepo.GetByID(appId);
-
-            if (appFromDb == null)
-                return null;
-
-           appFromDb.Status = "Cancelled";
-           appRepo.Update(appFromDb);
-           await appRepo.SaveAsync();
-
-            return new GeneralResponse
-            {
-                StatusCode = 200,
-                Message = "status updated"
-            };
-        }
+      
     }
 }

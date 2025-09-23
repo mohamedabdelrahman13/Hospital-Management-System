@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace Hospital_system.Controllers
 {
-    [Authorize(Roles = "Staff")]
+    //[Authorize(Roles = "Staff")]
     [Route("api/[controller]")]
     [ApiController]
     public class PatientController : ControllerBase
@@ -44,11 +44,21 @@ namespace Hospital_system.Controllers
         {
            var result = await patientService.SearchPatientsByName(query);
 
-            if (result == null) 
+            if (result.Count() == 0) 
             {
-                return Ok("no patients with that name");
+                return Ok(new GeneralResponse
+                {
+                    StatusCode = 404,
+                    Message = "No patient with specified name"
+                });
             }
-            return Ok(result);
+
+            return Ok(new GeneralResponse
+            {
+                StatusCode = 200 ,
+                Message = "data retrieved",
+                Data = result               
+            });
         }
 
 

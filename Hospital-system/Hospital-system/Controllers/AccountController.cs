@@ -75,51 +75,44 @@ namespace Hospital_system.Controllers
         {
             ApplicationUser? user = await userManager.FindByEmailAsync(loginDTO.Email);
 
-            if (user == null) 
+            if (user == null || user.isDeleted) 
             {
                 return Ok(new GeneralResponse
                 {
                     StatusCode = 400,
-                    Message = "Invalid Email or Password"
+                    Message = "Your account is not active. Please reach out to the administrator."
                 });
             }
 
-            if (user.LockoutEnd.HasValue && user.LockoutEnd > DateTime.UtcNow) 
+            //check if the account is locked
+            if (await userManager.IsLockedOutAsync(user))
             {
                 return Ok(new GeneralResponse
                 {
-                    StatusCode = 403, //forbidden
-                    Message = "Account is locked due to multiple failed login attempts. Try again later"
+                    StatusCode = 403,
+                    Message = "Account is locked due to multiple failed login attempts. Try again later."
                 });
-            }
-
-            // If lockout expired, reset attempts
-            if (user.LockoutEnd.HasValue && user.LockoutEnd <= DateTime.UtcNow)
-            {
-                user.FailedLoginAttempts = 0;
-                user.LockoutEnd = null;
-                await userManager.UpdateAsync(user);
-            }
+                
+            } 
 
             bool isFound = await userManager.CheckPasswordAsync(user, loginDTO.Password);
             if (!isFound)
             {
-                user.FailedLoginAttempts++;
 
-                if (user.FailedLoginAttempts >= 5)
-                {
-                    user.LockoutEnd = DateTime.UtcNow.AddMinutes(5);
-                }
-                await userManager.UpdateAsync(user);
-
+                // Increment failed attempts
+                await userManager.AccessFailedAsync(user);
                 return Ok(new GeneralResponse
                 {
                     StatusCode = 400,
                     Message = "Invalid Email or Password"
                 });
+
             }
 
-            
+            // Reset lockout if success
+            await userManager.ResetAccessFailedCountAsync(user);
+
+
             //creating the claims..
             var userClaims = new List<Claim>();
             userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
@@ -162,6 +155,64 @@ namespace Hospital_system.Controllers
         {
             var roles =await roleManager.Roles.ToListAsync();
             return Ok(roles);
+        }
+
+
+        [HttpPost("DeleteUser/{UserId}")]
+        public async Task<IActionResult> DeleteUser(string userId)
+        {
+            var userFromDB = await userManager.FindByIdAsync(userId);
+            if (userFromDB == null)
+            {
+                return Ok(new GeneralResponse
+                {
+                    StatusCode = 404,
+                    Message = "User not found"
+                });
+            }
+
+            userFromDB.isDeleted = true;
+            userFromDB.DeletedAt = DateTime.Now;
+
+            IdentityResult res = await userManager.UpdateAsync(userFromDB);
+
+            if (res.Succeeded) 
+            {
+                return Ok(new GeneralResponse
+                {
+                    StatusCode = 200,
+                    Message = "User updated successfully"
+                });
+                
+            }
+                return Ok(new GeneralResponse
+                {
+                    StatusCode = 400,
+                    Message = "Error updating user"
+                });
+       
+        }
+
+        [HttpGet("FilterUsers/{query}")]
+        public async Task<IActionResult> FilterUsers(string query)
+        {
+            var usersFromDB = await userManager.Users.Where(u => u.UserName.ToLower().Contains(query.ToLower())).ToListAsync();
+            if (!usersFromDB.Any())
+            {
+                return Ok(new GeneralResponse
+                {
+                    StatusCode = 404,
+                    Message = "No user with specified name",
+                });
+            }
+            var usersDTO = mapper.Map<List<UserWithDoctorDTO>>(usersFromDB);
+            return Ok(new GeneralResponse
+            {
+                StatusCode = 200,
+                Message = "Data retrieved",
+                Data = usersDTO
+
+            });          
         }
     }
 }

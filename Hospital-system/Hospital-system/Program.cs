@@ -27,10 +27,13 @@ namespace Hospital_system
             builder.Services.AddScoped<IDoctorService, DoctorService>();
             builder.Services.AddScoped<IAppointmentService, AppointmentService>();
             builder.Services.AddScoped<IDashboardService, DashboardService>();
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>( o=>
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>( options=>
             {
-                o.User.RequireUniqueEmail = true;                // Allow spaces in UserName
-                o.User.AllowedUserNameCharacters += " ";
+                options.User.RequireUniqueEmail = true;                // Allow spaces in UserName
+                options.User.AllowedUserNameCharacters += " ";
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); 
+                options.Lockout.MaxFailedAccessAttempts = 5;                    
+                options.Lockout.AllowedForNewUsers = true;
             }
             ).AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddScoped<IPatientService, PatientService>();

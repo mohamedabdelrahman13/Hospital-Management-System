@@ -52,17 +52,16 @@ namespace Hospital_system.Implementations
 
             var doctorsUsersDB = await userManager.GetUsersInRoleAsync("Doctor");
 
-            if (doctorsUsersDB == null)
+            if (doctorsUsersDB.Count == 0)
                 return null;
 
             var doctorsWithProfiles = doctorsUsersDB.Where(d => d.DoctorProfile == null).ToList();
 
-            if(doctorsWithProfiles == null)
+            if(doctorsWithProfiles.Count == 0)
                 return null;
+
              var doctorsDTOs = mapper.Map<List<UserWithDoctorDTO>>(doctorsWithProfiles);
-
-
-            return doctorsDTOs;
+              return doctorsDTOs;
 
         }
         public async Task<List<UserWithDoctorDTO>?> GetAllDoctorsWithProfile(string speciality)
@@ -70,11 +69,15 @@ namespace Hospital_system.Implementations
 
             var doctorsUsersDB = await userManager.GetUsersInRoleAsync("Doctor");
 
-            if (doctorsUsersDB == null)
+            if (doctorsUsersDB.Count == 0)
                 return null;
-            var doctorsWithProfiles = doctorsUsersDB.Where(d => d.DoctorProfile != null && d.DoctorProfile.Department.Name == speciality).ToList();
+            var doctorsWithProfiles = doctorsUsersDB
+                .Where(d =>d.isDeleted != true 
+                && d.DoctorProfile != null 
+                && d.DoctorProfile.Department.Name == speciality)
+                .ToList();
 
-            if(doctorsWithProfiles == null)
+            if(doctorsWithProfiles.Count == 0)
                 return null;
              var doctorsDTOs = mapper.Map<List<UserWithDoctorDTO>>(doctorsWithProfiles);
 

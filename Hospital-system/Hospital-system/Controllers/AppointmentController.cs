@@ -45,39 +45,25 @@ namespace Hospital_system.Controllers
 
         }
 
-        [Authorize(Roles = "Doctor")]
-        [HttpGet("GetAppointmentByUserId/{id}")]
-        public async Task<IActionResult> GetAppointmentByUserId(string id)
+        //[Authorize(Roles = "Doctor")]
+        [HttpGet("GetAppointmentByUserId/{id}/{appDate}")]
+        public async Task<IActionResult> GetAppointmentByUserId(string id , DateOnly appDate)
         {
-            var apps = await appService.GetAppSchedulesAsync(id);
+            var apps = await appService.GetAppSchedulesByDateAsync(id , appDate);
             return Ok(apps);
         }
-
-
-        [HttpPost("MarkCompleted/{appId}")]
-        public async Task<IActionResult> MarkCompleted(string appId)
+        [HttpGet("GetAllAppsDates")]
+        public async Task<IActionResult> GetAllAppointmentsDates()
         {
-            var result = await appService.MarkAsCompleted(appId);
-            if (result != null) 
-            {
-                return Ok(new GeneralResponse
-                {
-                    StatusCode = 200,
-                    Message = result.Message
-                });
-            }
-
-            return Ok(new GeneralResponse
-            {
-                StatusCode = 400,
-                Message = "failed to update status"
-            });
+            var appsDates = await appService.GetAllAppsDates();
+            return Ok(appsDates);
         }
 
-        [HttpPost("MarkCancelled/{appId}")]
-        public async Task<IActionResult> MarkCancelled(string appId)
+
+        [HttpPut("ModifyAppointmentStatus/{appId}/{newStatus}")]
+        public async Task<IActionResult> ModifyAppointmentStatus(string appId , string newStatus)
         {
-            var result = await appService.MarkAsCancelled(appId);
+            var result = await appService.ModifyAppStatus(appId , newStatus);
             if (result != null) 
             {
                 return Ok(new GeneralResponse
@@ -90,7 +76,7 @@ namespace Hospital_system.Controllers
             return Ok(new GeneralResponse
             {
                 StatusCode = 400,
-                Message = "failed to update status"
+                Message = "Failed to update status"
             });
         }
     }

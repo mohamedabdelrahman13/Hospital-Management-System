@@ -1,6 +1,38 @@
 [
   {
     "ContainingType": "Hospital_system.Controllers.AccountController",
+    "Method": "DeleteUser",
+    "RelativePath": "api/Account/DeleteUser/{UserId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Hospital_system.Controllers.AccountController",
+    "Method": "FilterUsers",
+    "RelativePath": "api/Account/FilterUsers/{query}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "query",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Hospital_system.Controllers.AccountController",
     "Method": "GetAllRoles",
     "RelativePath": "api/Account/GetRoles",
     "HttpMethod": "GET",
@@ -75,8 +107,18 @@
   },
   {
     "ContainingType": "Hospital_system.Controllers.AppointmentController",
+    "Method": "GetAllAppointmentsDates",
+    "RelativePath": "api/Appointment/GetAllAppsDates",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Hospital_system.Controllers.AppointmentController",
     "Method": "GetAppointmentByUserId",
-    "RelativePath": "api/Appointment/GetAppointmentByUserId/{id}",
+    "RelativePath": "api/Appointment/GetAppointmentByUserId/{id}/{appDate}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -85,21 +127,10 @@
         "Name": "id",
         "Type": "System.String",
         "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Hospital_system.Controllers.AppointmentController",
-    "Method": "MarkCancelled",
-    "RelativePath": "api/Appointment/MarkCancelled/{appId}",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
+      },
       {
-        "Name": "appId",
-        "Type": "System.String",
+        "Name": "appDate",
+        "Type": "System.DateOnly",
         "IsRequired": true
       }
     ],
@@ -107,14 +138,19 @@
   },
   {
     "ContainingType": "Hospital_system.Controllers.AppointmentController",
-    "Method": "MarkCompleted",
-    "RelativePath": "api/Appointment/MarkCompleted/{appId}",
-    "HttpMethod": "POST",
+    "Method": "ModifyAppointmentStatus",
+    "RelativePath": "api/Appointment/ModifyAppointmentStatus/{appId}/{newStatus}",
+    "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "appId",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "newStatus",
         "Type": "System.String",
         "IsRequired": true
       }

@@ -6,8 +6,9 @@ namespace Hospital_system.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public int FailedLoginAttempts { get; set; } = 0;
+        public bool isDeleted { get; set; } = false;
+        public DateTime DeletedAt { get; set; }
         [JsonIgnore]
-        public virtual Doctor DoctorProfile { get; set; }
+        public virtual Doctor? DoctorProfile { get; set; }
     }
 }

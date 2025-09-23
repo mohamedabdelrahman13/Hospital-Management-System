@@ -79,6 +79,50 @@
         }
       }
     },
+    "/api/Account/DeleteUser/{UserId}": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Account/FilterUsers/{query}": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "parameters": [
+          {
+            "name": "query",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Appointment/BookAppointment": {
       "post": {
         "tags": [
@@ -141,7 +185,7 @@
         }
       }
     },
-    "/api/Appointment/GetAppointmentByUserId/{id}": {
+    "/api/Appointment/GetAppointmentByUserId/{id}/{appDate}": {
       "get": {
         "tags": [
           "Appointment"
@@ -154,6 +198,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "appDate",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
           }
         ],
         "responses": {
@@ -163,8 +216,20 @@
         }
       }
     },
-    "/api/Appointment/MarkCompleted/{appId}": {
-      "post": {
+    "/api/Appointment/GetAllAppsDates": {
+      "get": {
+        "tags": [
+          "Appointment"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Appointment/ModifyAppointmentStatus/{appId}/{newStatus}": {
+      "put": {
         "tags": [
           "Appointment"
         ],
@@ -176,23 +241,9 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Appointment/MarkCancelled/{appId}": {
-      "post": {
-        "tags": [
-          "Appointment"
-        ],
-        "parameters": [
+          },
           {
-            "name": "appId",
+            "name": "newStatus",
             "in": "path",
             "required": true,
             "schema": {
