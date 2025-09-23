@@ -79,14 +79,22 @@
         }
       }
     },
-    "/api/Account/DeleteUser/{UserId}": {
-      "post": {
+    "/api/Account/UpdateUser/{UserId}/{newStatus}": {
+      "put": {
         "tags": [
           "Account"
         ],
         "parameters": [
           {
             "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "newStatus",
             "in": "path",
             "required": true,
             "schema": {

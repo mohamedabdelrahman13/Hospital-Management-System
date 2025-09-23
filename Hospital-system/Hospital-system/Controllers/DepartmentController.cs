@@ -17,6 +17,7 @@ namespace Hospital_system.Controllers
         }
 
         [HttpGet("GetAllDepartments")]
+        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Any, NoStore = false)]
         public async Task<IActionResult> GetAllDepartments()
         {
             var depts = await deptService.GetAllDepartments();

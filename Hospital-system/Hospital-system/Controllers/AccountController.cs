@@ -158,8 +158,8 @@ namespace Hospital_system.Controllers
         }
 
 
-        [HttpPost("DeleteUser/{UserId}")]
-        public async Task<IActionResult> DeleteUser(string userId)
+        [HttpPut("UpdateUser/{UserId}/{newStatus}")]
+        public async Task<IActionResult> UpdateUser(string userId , string newStatus)
         {
             var userFromDB = await userManager.FindByIdAsync(userId);
             if (userFromDB == null)
@@ -171,9 +171,16 @@ namespace Hospital_system.Controllers
                 });
             }
 
-            userFromDB.isDeleted = true;
-            userFromDB.DeletedAt = DateTime.Now;
-
+            if(newStatus == "Delete")
+            {
+                userFromDB.isDeleted = true;
+                userFromDB.DeletedAt = DateTime.Now;
+            }
+            else
+            {
+                userFromDB.isDeleted = false;
+            }
+            
             IdentityResult res = await userManager.UpdateAsync(userFromDB);
 
             if (res.Succeeded) 
@@ -194,6 +201,7 @@ namespace Hospital_system.Controllers
         }
 
         [HttpGet("FilterUsers/{query}")]
+        //[ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Any, NoStore = false)]
         public async Task<IActionResult> FilterUsers(string query)
         {
             var usersFromDB = await userManager.Users.Where(u => u.UserName.ToLower().Contains(query.ToLower())).ToListAsync();

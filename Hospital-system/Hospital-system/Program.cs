@@ -96,6 +96,7 @@ namespace Hospital_system
         }
     });
             });
+            builder.Services.AddResponseCaching();
             builder.Services.AddControllers();
             var app = builder.Build();
 
@@ -113,7 +114,7 @@ namespace Hospital_system
                 context.Response.Redirect("/swagger");
                 return Task.CompletedTask;
             });
-
+            app.UseResponseCaching();
             app.MapControllers();
 
             app.Run();

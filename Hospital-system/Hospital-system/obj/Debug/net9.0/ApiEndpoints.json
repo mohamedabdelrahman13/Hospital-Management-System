@@ -1,22 +1,6 @@
 [
   {
     "ContainingType": "Hospital_system.Controllers.AccountController",
-    "Method": "DeleteUser",
-    "RelativePath": "api/Account/DeleteUser/{UserId}",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userId",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Hospital_system.Controllers.AccountController",
     "Method": "FilterUsers",
     "RelativePath": "api/Account/FilterUsers/{query}",
     "HttpMethod": "GET",
@@ -68,6 +52,27 @@
       {
         "Name": "registerDTO",
         "Type": "Hospital_system.DTOs.RegisterDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Hospital_system.Controllers.AccountController",
+    "Method": "UpdateUser",
+    "RelativePath": "api/Account/UpdateUser/{UserId}/{newStatus}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "newStatus",
+        "Type": "System.String",
         "IsRequired": true
       }
     ],
