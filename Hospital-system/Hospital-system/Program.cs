@@ -41,7 +41,7 @@ namespace Hospital_system
             builder.Services.AddScoped<IInvoiceService, InvoiceService>();
             builder.Services.AddScoped<IDepartmentService, DepartmentService>();
             builder.Services.AddAutoMapper(typeof(Program));
-
+            builder.Services.AddMemoryCache();
             builder.Services.AddAuthentication(o =>
             {
                 o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

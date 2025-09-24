@@ -14,7 +14,7 @@ using System.Text;
 
 namespace Hospital_system.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    //[Authorize(Roles ="Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase

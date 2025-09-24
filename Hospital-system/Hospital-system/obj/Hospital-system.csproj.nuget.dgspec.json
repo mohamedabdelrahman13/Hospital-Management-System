@@ -81,6 +81,10 @@
               "target": "Package",
               "version": "[9.0.8, )"
             },
+            "Microsoft.Extensions.Caching.StackExchangeRedis": {
+              "target": "Package",
+              "version": "[9.0.9, )"
+            },
             "Stripe.net": {
               "target": "Package",
               "version": "[48.5.0, )"

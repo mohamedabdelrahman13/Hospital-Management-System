@@ -27,7 +27,7 @@ namespace Hospital_system.Controllers
         public async Task<IActionResult> GetAllDoctorsWithoutProfile()
         {
             var doctors = await docService.GetAllDoctorsWithoutProfile();
-            if (doctors.Count == 0) 
+            if (doctors?.Count == 0) 
             {
                 return Ok(doctors);
             }

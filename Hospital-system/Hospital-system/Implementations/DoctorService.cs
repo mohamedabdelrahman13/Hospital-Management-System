@@ -6,6 +6,7 @@ using Hospital_system.Interfaces;
 using Hospital_system.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using System.Threading.Tasks;
 
 namespace Hospital_system.Implementations
@@ -15,58 +16,41 @@ namespace Hospital_system.Implementations
         private readonly IBaseRepository<Doctor> doctorRepo;
         private readonly IMapper mapper;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IMemoryCache cache;
 
         public DoctorService(IBaseRepository<Doctor> doctor
             , IMapper mapper
-            ,UserManager<ApplicationUser> userManager)
+            ,UserManager<ApplicationUser> userManager
+            ,IMemoryCache cache)
         {
             this.doctorRepo = doctor;
             this.mapper = mapper;
             this.userManager = userManager;
+            this.cache = cache;
         }
 
-        public async Task<GeneralResponse> AddDoctor(AddDoctorDTO doctor)
-        {
-            var doctorDB = mapper.Map<Doctor>(doctor);
-            if (doctorDB == null) 
-            {
-                return new GeneralResponse
-                {
-                    StatusCode = 404,
-                    Message = "not Found",
-                };
-            }
-
-            await doctorRepo.AddAsync(doctorDB);
-            await doctorRepo.SaveAsync();
-            return new GeneralResponse
-            {
-                StatusCode = 200,
-                Message = "Saved Successfully"
-            };
-            
-        }
+     
 
         public async Task<List<UserWithDoctorDTO>?> GetAllDoctorsWithoutProfile()
         {
 
             var doctorsUsersDB = await userManager.GetUsersInRoleAsync("Doctor");
+            var doctorsWithoutProfiles =  doctorsUsersDB.Where(d => d.DoctorProfile == null).ToList();
 
-            if (doctorsUsersDB.Count == 0)
-                return null;
-
-            var doctorsWithProfiles = doctorsUsersDB.Where(d => d.DoctorProfile == null).ToList();
-
-            if(doctorsWithProfiles.Count == 0)
-                return null;
-
-             var doctorsDTOs = mapper.Map<List<UserWithDoctorDTO>>(doctorsWithProfiles);
+             var doctorsDTOs = mapper.Map<List<UserWithDoctorDTO>>(doctorsWithoutProfiles);
               return doctorsDTOs;
 
         }
         public async Task<List<UserWithDoctorDTO>?> GetAllDoctorsWithProfile(string speciality)
         {
+            var cacheKey = $"Doctors_{speciality}";
 
+            if (cache.TryGetValue(cacheKey, out List<UserWithDoctorDTO>? cachedDoctors))
+            {
+                return cachedDoctors;
+            }
+
+           
             var doctorsUsersDB = await userManager.GetUsersInRoleAsync("Doctor");
 
             if (doctorsUsersDB.Count == 0)
@@ -81,6 +65,11 @@ namespace Hospital_system.Implementations
                 return null;
              var doctorsDTOs = mapper.Map<List<UserWithDoctorDTO>>(doctorsWithProfiles);
 
+            // Save Data to cache for 2 hours..
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromHours(2));
+
+            cache.Set(cacheKey, doctorsDTOs, cacheOptions);
 
             return doctorsDTOs;
         }
@@ -102,7 +91,27 @@ namespace Hospital_system.Implementations
             }
             return null;
         }
+        public async Task<GeneralResponse> AddDoctor(AddDoctorDTO doctor)
+        {
+            var doctorDB = mapper.Map<Doctor>(doctor);
+            if (doctorDB == null)
+            {
+                return new GeneralResponse
+                {
+                    StatusCode = 404,
+                    Message = "not Found",
+                };
+            }
 
+            await doctorRepo.AddAsync(doctorDB);
+            await doctorRepo.SaveAsync();
+            return new GeneralResponse
+            {
+                StatusCode = 200,
+                Message = "Saved Successfully"
+            };
+
+        }
         public async Task<UserWithDoctorDTO> GetDoctorByUserId(string Id)
         {
             var user = await userManager.FindByIdAsync(Id);
