@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace Hospital_system.Controllers
 {
-    //[Authorize(Roles = "Staff")]
+    [Authorize(Roles = "Staff")]
     [Route("api/[controller]")]
     [ApiController]
     public class PatientController : ControllerBase
