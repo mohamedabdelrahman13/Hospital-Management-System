@@ -4,6 +4,7 @@ using Hospital_system.Interfaces;
 using Hospital_system.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Hospital_system.Implementations
 {
@@ -11,12 +12,15 @@ namespace Hospital_system.Implementations
     {
         private readonly IBaseRepository<Patient> patientRepo;
         private readonly IMapper mapper;
+        private readonly IMemoryCache cache;
 
         public PatientService( IBaseRepository<Patient> patientRepo
-            ,IMapper mapper)
+            ,IMapper mapper
+            ,IMemoryCache cache)
         {
             this.patientRepo = patientRepo;
             this.mapper = mapper;
+            this.cache = cache;
         }
 
 
@@ -41,10 +45,29 @@ namespace Hospital_system.Implementations
 
         public async Task<List<Patient>?> SearchPatientsByName(string queryText)
         {
-            var patients =await patientRepo.GetAll().Where(p => p.Name.Contains(queryText)).ToListAsync();
-            if (patients.Any()) 
+            var cacheKey = "AllPatients";
+            var patients = new List<Patient>();
+
+            if (cache.TryGetValue(cacheKey, out List<Patient>? cachedPatients))
             {
-                return patients;
+                patients = cachedPatients;
+            }
+            else
+            {
+                patients = await patientRepo.GetAll().ToListAsync();
+            }
+
+            var filteredPatients = patients.Where(p => p.Name.ToLower().Contains(queryText.ToLower())).Take(5).ToList();
+
+            if (filteredPatients.Any())
+            {
+                //cachw for 2 hours...
+                var cacheOptions = new MemoryCacheEntryOptions()
+                  .SetAbsoluteExpiration(TimeSpan.FromHours(2));
+
+                cache.Set(cacheKey, patients, cacheOptions);
+
+                return filteredPatients;
             }
             return [];
 
@@ -58,6 +81,8 @@ namespace Hospital_system.Implementations
             await patientRepo.AddAsync(PatientFromDB);
             //saving
             await patientRepo.SaveAsync();
+
+            cache.Remove("AllPatients");
         }
 
         public async Task EditPatient(UpdatePatientDTO updatePatientDTO)

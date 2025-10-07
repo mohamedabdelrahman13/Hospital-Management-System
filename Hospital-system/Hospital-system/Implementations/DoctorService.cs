@@ -17,16 +17,19 @@ namespace Hospital_system.Implementations
         private readonly IMapper mapper;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IMemoryCache cache;
+        private readonly IDepartmentService deptService;
 
         public DoctorService(IBaseRepository<Doctor> doctor
             , IMapper mapper
             ,UserManager<ApplicationUser> userManager
-            ,IMemoryCache cache)
+            ,IMemoryCache cache
+            ,IDepartmentService deptService)
         {
             this.doctorRepo = doctor;
             this.mapper = mapper;
             this.userManager = userManager;
             this.cache = cache;
+            this.deptService = deptService;
         }
 
      
@@ -105,6 +108,10 @@ namespace Hospital_system.Implementations
 
             await doctorRepo.AddAsync(doctorDB);
             await doctorRepo.SaveAsync();
+
+            var dept = await deptService.GetDepartmentByID(doctor.DepartmentID);
+            var speciality = dept.Name;
+            cache.Remove($"Doctors_{speciality}");
             return new GeneralResponse
             {
                 StatusCode = 200,

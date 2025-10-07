@@ -6,6 +6,7 @@ namespace Hospital_system.Interfaces
     public interface IDepartmentService
     {
         public Task<List<DepartmentDTO>> GetAllDepartments();
+        public Task<DepartmentDTO> GetDepartmentByID(string id);
         public Task<DepartmentDTO> SearchDepartmentByName(string query);
     }
 }

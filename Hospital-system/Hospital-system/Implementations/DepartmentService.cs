@@ -26,6 +26,14 @@ namespace Hospital_system.Implementations
 
             return deptsDTO;
         }
+        public async Task<DepartmentDTO> GetDepartmentByID(string id)
+        {
+            var dept = await deptRepo.GetByID(id);
+
+            var deptDTO = mapper.Map<DepartmentDTO>(dept);
+
+            return deptDTO;
+        }
 
         public async Task<DepartmentDTO> SearchDepartmentByName(string query)
         {

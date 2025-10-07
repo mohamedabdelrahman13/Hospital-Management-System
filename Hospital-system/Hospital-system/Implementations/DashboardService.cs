@@ -128,7 +128,6 @@ namespace Hospital_system.Implementations
         public async Task<int> GetTotalPatients()
         {
             var patientsNumber = await patientRepo.GetAll().CountAsync();
-           
             return patientsNumber;
            
         }
