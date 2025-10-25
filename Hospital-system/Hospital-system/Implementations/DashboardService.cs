@@ -4,6 +4,7 @@ using Hospital_system.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Metrics;
+using System.Threading.Tasks;
 
 namespace Hospital_system.Implementations
 {
@@ -48,7 +49,7 @@ namespace Hospital_system.Implementations
                    {
                        Time = g.Key.Year + "-" + g.Key.Month.ToString("D2"),
                        NumberOfAppointments = g.Count(),
-                       Percentage = (g.Count() / totalNumberOfAppointments)*100
+                       Percentage = Math.Round((double)g.Count() / totalNumberOfAppointments*100 , 1)
                    })
                    .ToListAsync();
 
@@ -129,7 +130,7 @@ namespace Hospital_system.Implementations
         {
             var patientsNumber = await patientRepo.GetAll().CountAsync();
             return patientsNumber;
-           
+
         }
         public async Task<int> GetTotalStaff()
         {
@@ -140,17 +141,43 @@ namespace Hospital_system.Implementations
         }
         public async Task<decimal> GetAverageCost()
         {
-            var AvgCost = await appRepo.GetAll().Select(a=>a.Cost).AverageAsync();
-
+            var AvgCost = await appRepo.GetAll().AverageAsync(a=>a.Cost);
             return Math.Round(AvgCost , 2);
           
         }
-        public decimal GetTotalCost()
+        public async Task<decimal> GetTotalCost()
         {
-            var TotalRevenue = appRepo.GetAll().Sum(a=>a.Cost);
+            var TotalRevenue = await appRepo.GetAll().SumAsync(a=>a.Cost);
             return Math.Round(TotalRevenue, 2); 
         }
-   
+
+        public async Task<DashboardDataDTO> CreateDashboardData()
+        {
+            DashboardDataDTO dashboardData = new DashboardDataDTO
+            {
+                TotalPatients = await GetTotalPatients(),
+                TotalStaff = await GetTotalStaff(),
+                TotalCost = await GetTotalCost(),
+                AverageCost = await GetAverageCost(),
+            };
+
+           
+            return dashboardData;
+        }
+        public async Task<DashboardStatsDTO> CreateDashboardStats(string view)
+        {
+            DashboardStatsDTO dashboardStats = new DashboardStatsDTO
+            {
+                AppointmentsStats = await GetAppointmentsStats(view),
+                DepartmentsStats = await GetDeptsStats(),
+                patientRegisterationStats = await GetPatientsStats(view),
+                revenueStats = await GetRevenueStats(view),
+                
+            };
+
+           
+            return dashboardStats;
+        }
 
 
         //public async Task<List<dynamic>> GetPatientsByDay()

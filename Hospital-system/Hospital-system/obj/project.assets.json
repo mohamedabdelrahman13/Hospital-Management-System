@@ -5262,11 +5262,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\Hospital management system\\Hospital-Management-System\\Hospital-system\\Hospital-system\\Hospital-system.csproj",
+      "projectUniqueName": "E:\\Hospital-Management-System\\Hospital-system\\Hospital-system\\Hospital-system.csproj",
       "projectName": "Hospital-system",
-      "projectPath": "F:\\Hospital management system\\Hospital-Management-System\\Hospital-system\\Hospital-system\\Hospital-system.csproj",
+      "projectPath": "E:\\Hospital-Management-System\\Hospital-system\\Hospital-system\\Hospital-system.csproj",
       "packagesPath": "C:\\Users\\محمود\\.nuget\\packages\\",
-      "outputPath": "F:\\Hospital management system\\Hospital-Management-System\\Hospital-system\\Hospital-system\\obj\\",
+      "outputPath": "E:\\Hospital-Management-System\\Hospital-system\\Hospital-system\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -5368,7 +5368,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

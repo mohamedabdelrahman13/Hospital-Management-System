@@ -1,4 +1,5 @@
 using Hospital_system.Data;
+using Hospital_system.Hubs;
 using Hospital_system.Implementations;
 using Hospital_system.Interfaces;
 using Hospital_system.Models;
@@ -40,6 +41,7 @@ namespace Hospital_system
             builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddScoped<IInvoiceService, InvoiceService>();
             builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+            builder.Services.AddSignalR();
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddMemoryCache();
             builder.Services.AddAuthentication(o =>
@@ -62,9 +64,11 @@ namespace Hospital_system
             {
                 options.AddPolicy("AllowAll",
                     policy => policy
-                        .AllowAnyOrigin()   // Allow requests from any domain
+                         .WithOrigins("http://localhost:4200")
                         .AllowAnyMethod()   // Allow GET, POST, PUT, DELETE, etc.
-                        .AllowAnyHeader()); // Allow any headers
+                        .AllowAnyHeader() // Allow any headers
+                        .AllowCredentials());
+                         
             });
             builder.Services.AddSwaggerGen(c =>
             {
@@ -107,6 +111,7 @@ namespace Hospital_system
                 app.UseSwaggerUI();
             }
             app.UseHttpsRedirection();
+            app.MapHub<DashboardHub>("/DashboardHub");
             app.UseCors("AllowAll");
             app.UseAuthorization();
             app.MapGet("/", context =>

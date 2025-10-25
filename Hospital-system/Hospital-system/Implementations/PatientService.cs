@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Hospital_system.DTOs;
+using Hospital_system.Hubs;
 using Hospital_system.Interfaces;
 using Hospital_system.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -13,14 +15,20 @@ namespace Hospital_system.Implementations
         private readonly IBaseRepository<Patient> patientRepo;
         private readonly IMapper mapper;
         private readonly IMemoryCache cache;
+        private readonly IHubContext<DashboardHub> dHub;
+        private readonly IDashboardService dashboardService;
 
         public PatientService( IBaseRepository<Patient> patientRepo
             ,IMapper mapper
-            ,IMemoryCache cache)
+            ,IMemoryCache cache
+            ,IHubContext<DashboardHub> dHub
+            ,IDashboardService dashboardService)
         {
             this.patientRepo = patientRepo;
             this.mapper = mapper;
             this.cache = cache;
+            this.dHub = dHub;
+            this.dashboardService = dashboardService;
         }
 
 
@@ -81,6 +89,9 @@ namespace Hospital_system.Implementations
             await patientRepo.AddAsync(PatientFromDB);
             //saving
             await patientRepo.SaveAsync();
+
+            var DashboardData = await dashboardService.CreateDashboardData();
+            await dHub.Clients.All.SendAsync("updateDashboard", DashboardData);
 
             cache.Remove("AllPatients");
         }

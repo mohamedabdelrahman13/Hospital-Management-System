@@ -1,10 +1,12 @@
 ﻿using Hospital_system.DTOs;
 using Hospital_system.Helpers;
+using Hospital_system.Hubs;
 using Hospital_system.Interfaces;
 using Hospital_system.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace Hospital_system.Controllers
@@ -15,10 +17,16 @@ namespace Hospital_system.Controllers
     public class PatientController : ControllerBase
     {
         private readonly IPatientService patientService;
+        private readonly IHubContext<DashboardHub> dHub;
+        private readonly IDashboardService dashboardService;
 
-        public PatientController(IPatientService patientService)
+        public PatientController(IPatientService patientService,
+            IHubContext<DashboardHub> dHub
+            ,IDashboardService dashboardService)
         {
             this.patientService = patientService;
+            this.dHub = dHub;
+            this.dashboardService = dashboardService;
         }
 
         [HttpGet("GetAllPatients")]
@@ -32,6 +40,7 @@ namespace Hospital_system.Controllers
         public async Task<IActionResult> AddPatient(CreatePatientDTO patientDTO)
         {
             await patientService.AddPatient(patientDTO);
+            await dHub.Clients.All.SendAsync("patientsNumber", await dashboardService.GetTotalPatients());
             return Ok(new GeneralResponse
             {
                 StatusCode = Response.StatusCode,

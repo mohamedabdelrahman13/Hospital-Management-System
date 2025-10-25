@@ -12,6 +12,8 @@ namespace Hospital_system.Interfaces
         Task<int> GetTotalPatients();
         Task<int> GetTotalStaff();
         Task<decimal> GetAverageCost();
-        public decimal GetTotalCost();
+        Task<decimal> GetTotalCost();
+        Task<DashboardDataDTO> CreateDashboardData();
+        Task<DashboardStatsDTO> CreateDashboardStats(string view);
     }
 }

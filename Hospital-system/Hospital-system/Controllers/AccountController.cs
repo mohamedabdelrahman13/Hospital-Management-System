@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
 using Hospital_system.DTOs;
 using Hospital_system.Helpers;
+using Hospital_system.Hubs;
+using Hospital_system.Implementations;
+using Hospital_system.Interfaces;
 using Hospital_system.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -22,14 +26,20 @@ namespace Hospital_system.Controllers
         private readonly IMapper mapper;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
+        private readonly IHubContext<DashboardHub> dHub;
+        private readonly IDashboardService dashboardService;
 
         public AccountController(IMapper mapper
             ,UserManager<ApplicationUser> userManager
-            ,RoleManager<IdentityRole> roleManager)
+            ,RoleManager<IdentityRole> roleManager
+            ,IHubContext<DashboardHub> dHub
+            ,IDashboardService dashboardService)
         {
             this.mapper = mapper;
             this.userManager = userManager;
             this.roleManager = roleManager;
+            this.dHub = dHub;
+            this.dashboardService = dashboardService;
         }
 
 
@@ -45,6 +55,9 @@ namespace Hospital_system.Controllers
                var roleRes =  await userManager.AddToRoleAsync(user , registerDTO.Role);
                 if (roleRes.Succeeded)
                 {
+
+                     var dashboardData = await dashboardService.CreateDashboardData();
+                    await dHub.Clients.All.SendAsync("updateDashboard", dashboardData);
                     return Ok(new GeneralResponse
                     {
                         StatusCode = 200,

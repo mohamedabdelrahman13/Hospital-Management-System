@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Hospital_system.DTOs;
 using Hospital_system.Helpers;
+using Hospital_system.Hubs;
 using Hospital_system.Interfaces;
 using Hospital_system.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital_system.Implementations
@@ -15,16 +17,22 @@ namespace Hospital_system.Implementations
         private readonly IBaseRepository<Doctor> docRepo;
         private readonly IMapper mapper;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IDashboardService dashboardService;
+        private readonly IHubContext<DashboardHub> dHub;
 
         public AppointmentService(IBaseRepository<Appointment> appRepo 
             ,IBaseRepository<Doctor> docRepo
             ,IMapper mapper
-            ,UserManager<ApplicationUser> userManager)
+            ,UserManager<ApplicationUser> userManager
+            ,IDashboardService dashboardService
+            ,IHubContext<DashboardHub> dHub)
         {
             this.appRepo = appRepo;
             this.docRepo = docRepo;
             this.mapper = mapper;
             this.userManager = userManager;
+            this.dashboardService = dashboardService;
+            this.dHub = dHub;
         }
         public async Task<GeneralResponse?> BookAppointment(AppointmentDTO appDTO)
         {
@@ -42,6 +50,9 @@ namespace Hospital_system.Implementations
 
             await appRepo.AddAsync(app);
             await appRepo.SaveAsync();
+
+            var dashboardData = await dashboardService.CreateDashboardData();
+            await dHub.Clients.All.SendAsync("updateDashboard", dashboardData);
             return new GeneralResponse
             {
                 StatusCode = 200,
