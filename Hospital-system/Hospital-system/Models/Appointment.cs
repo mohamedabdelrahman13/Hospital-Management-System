@@ -31,10 +31,10 @@ namespace Hospital_system.Models
         public virtual Patient Patient { get; set; }
 
 
-        [ForeignKey("ConsultationHour")]
-        public string? ConsultationHourID { get; set; }
-        [JsonIgnore]
-        public virtual ConsultationHour ConsultationHour { get; set; }
+        //[ForeignKey("ConsultationHour")]
+        //public string? ConsultationHourID { get; set; }
+        //[JsonIgnore]
+        //public virtual ConsultationHour ConsultationHour { get; set; }
 
     }
 }

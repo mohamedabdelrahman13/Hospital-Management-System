@@ -33,16 +33,18 @@ namespace Hospital_system.Controllers
         }
         [Authorize(Roles = "Staff")]
         [HttpPost("CheckAvailability")]
-        public async Task<IActionResult> CheckAvailability([FromBody]AppointmentDTO appointment)
+        public async Task<IActionResult> CheckAvailability(AppointmentDTO appointment)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var result = await appService.CheckAvailability(appointment);
 
             return Ok(new GeneralResponse
             {
                 StatusCode = result.StatusCode,
-                Message = result.Message
+                Message = result.Message,
             });
-
         }
 
         //[Authorize(Roles = "Doctor")]

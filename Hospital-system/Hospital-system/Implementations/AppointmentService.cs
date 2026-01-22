@@ -39,6 +39,7 @@ namespace Hospital_system.Implementations
             //to be modified
             var app = new Appointment()
             {
+              
                 DoctorUserID = appDTO.DoctorID,
                 patientID = appDTO.PatientID,
                 Date = appDTO.Date,
@@ -78,7 +79,17 @@ namespace Hospital_system.Implementations
                     var AppointmentDay = appDTO.Date.DayOfWeek.ToString();
 
                     //find if doctor works on that day or not 
-                    var consultation = doctorDto.DoctorProfile?.ConsultationHours
+
+                    if (doctorDto.DoctorProfile == null ||
+                    doctorDto.DoctorProfile.ConsultationHours == null)
+                                    {
+                                        return new GeneralResponse
+                                        {
+                                            StatusCode = 404,
+                                            Message = "Doctor consultation hours not configured"
+                                        };
+                    }
+                    var consultation = doctorDto.DoctorProfile.ConsultationHours
                         .FirstOrDefault(ch => ch.DayOfWeek == AppointmentDay);
 
                     if (consultation == null)
