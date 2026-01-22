@@ -47,7 +47,7 @@ namespace Hospital_system.Controllers
             });
         }
 
-        //[Authorize(Roles = "Doctor")]
+        [Authorize(Roles = "Doctor")]
         [HttpGet("GetAppointmentByUserId/{id}/{appDate}")]
         public async Task<IActionResult> GetAppointmentByUserId(string id , DateOnly appDate)
         {
